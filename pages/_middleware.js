@@ -7,17 +7,19 @@ export async function middleware(req) {
 
   //Allow the request if the flowing is true
   // token exists
-  if (pathname.includes("/api/auth") || token) {
+  if (pathname.startsWith("/api/auth") || token) {
     return NextResponse.next();
   }
 
   // no token
   if (!token && pathname !== "/login") {
-    return NextResponse.redirect(`${origin}/login`);
+    const url = req.nextUrl.clone();
+    url.pathname = "/login";
+    return NextResponse.rewrite(url);
   }
 
   // token
   if (token && pathname == "/login") {
-    return NextResponse.redirect(`${origin}/`);
+    return NextResponse.rewrite(`${origin}/`);
   }
 }

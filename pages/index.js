@@ -1,5 +1,7 @@
 import Head from "next/head";
 import Sidebar from "../components/Sidebar";
+import Center from "../components/Center";
+
 const Home = () => {
   return (
     <div className="h-screen overflow-hidden bg-black">
@@ -7,9 +9,9 @@ const Home = () => {
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className=" ">
+      <main className="flex ">
         <Sidebar />
-        {/**Center */}
+        <Center />
       </main>
     </div>
   );

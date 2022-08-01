@@ -6,7 +6,7 @@ function Login({ providers }) {
       <img className="w-52 mb-5" src="https://links.papareact.com/9xl" />
 
       {Object.values(providers).map((provider) => (
-        <div>
+        <div key={provider.name}>
           <button
             className="bg-green-500 hover:bg-green-600 transition-color duration-75 text-white p-5 rounded-full"
             onClick={() => signIn(provider.id, { callbackUrl: "/" })}
