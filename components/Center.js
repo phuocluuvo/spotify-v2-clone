@@ -1,16 +1,18 @@
 import { ChevronDownIcon } from "@heroicons/react/outline";
 import { signOut, useSession } from "next-auth/react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { playlistIdState, playlistState } from "../atoms/playlistAtom";
 import useSpotify from "../hooks/useSpotify";
 import Songs from "../components/Songs";
+
 function Center() {
   const { data: session } = useSession();
   const playlistId = useRecoilValue(playlistIdState); //just get the value "read-only"
   const [playlist, setPlaylist] = useRecoilState(playlistState);
   const spotifyApi = useSpotify();
-
+  const [x, setX] = useState(0);
+  const [y, setY] = useState(0);
   useEffect(() => {
     if (spotifyApi.getAccessToken()) {
       spotifyApi
@@ -25,12 +27,23 @@ function Center() {
     return parseInt(number).toLocaleString();
   }
   // console.log(playlist);
+  function scrolling() {
+    document.getElementById("title_playlist").classList.remove("hidden");
+    console.log(window);
+  }
   return (
-    <div className="flex-grow text-white relative h-screen overflow-y-scroll scrollbar-hide">
+    <div
+      className="flex-grow text-white relative h-screen overflow-y-scroll scrollbar-hide"
+      onScroll={scrolling}
+    >
       <header className="sticky top-0 right-8 bg-red-900 flex justify-between p-5 z-50">
-        <p className="text-3xl font-bold tracking-tighter md:leading-8 truncate flex-[0.9]">
+        <p
+          id="title_playlist"
+          className="hidden text-3xl font-bold tracking-tighter md:leading-8 truncate flex-[0.9]"
+        >
           {playlist?.name}
         </p>
+        {x + ":" + y}
         <div
           className=" flex items-center w-fit rounded-full bg-neutral-800 space-x-3 cursor-pointer bg-opacity-70 hover:bg-opacity-100 p-1 pr-2 "
           onClick={() => signOut({ callbackUrl: "/login" })}

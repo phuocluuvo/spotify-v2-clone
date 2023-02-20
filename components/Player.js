@@ -6,6 +6,7 @@ import {
   ReplyIcon,
   RewindIcon,
   SwitchHorizontalIcon,
+  VolumeOffIcon,
   VolumeUpIcon,
 } from "@heroicons/react/solid";
 import { useSession } from "next-auth/react";
@@ -28,9 +29,10 @@ function Player() {
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
   const [hover, setHover] = useState(false);
   const [volume, setVolume] = useState(50);
+  const [volumeHolder, setVolumeHolder] = useState(0); // keep temporarily volume value
   const [isOpenImage, setIsOpenImage] = useRecoilState(openImageState);
-
   const trackInfo = useTrackInfo();
+
   const fetchCurrentSong = () => {
     if (!trackInfo) {
       spotifyApi.getMyCurrentPlayingTrack().then((data) => {
@@ -48,6 +50,7 @@ function Player() {
       setVolume(50);
     }
   }, [currentTrackId, spotifyApi, session]);
+
   // useEffect(() => {
   //   if (volume > 0 && volume < 100) {
   //     debouncedAdjustVolume(volume);
@@ -77,14 +80,13 @@ function Player() {
   };
   return (
     <div className="flex bg-black w-full justify-between">
-      <div className=" flex m-3 space-x-4 h-20 ">
-        <div className="relative">
+      <div
+        className=" flex flex-1 m-3 h-20 space-x-3
+ "
+      >
+        <div className={`relative flex-initial flex `}>
           <img
-            className={`${
-              isOpenImage
-                ? "hidden"
-                : `h-[${trackInfo?.album.images[2]?.height}px] w-[${trackInfo?.album.images[2]?.width}px] `
-            } `}
+            className={`${isOpenImage ? "hidden" : `h-full w-full `} `}
             src={trackInfo?.album.images[2]?.url}
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
@@ -101,13 +103,13 @@ function Player() {
             onMouseLeave={() => setHover(false)}
           />
         </div>
-        <div>
-          <h1 className="text-white lg:text-xl sm:text-sm">
-            {trackInfo?.name}
-          </h1>
+        <div className="overflow-hidden text-white flex-1  flex-col">
+          <h1 className=" lg:text-xl sm:text-sm">{trackInfo?.name}</h1>
+
           <a
             href={trackInfo?.artists[0].external_urls.spotify}
-            className="opacity-50 w-[20vw] truncate text-white 
+            className="opacity-50 w-fit
+            truncate
             hover:opacity-100 hover:text-white hover:underline duration-75
             sm:text-sm"
           >
@@ -115,7 +117,7 @@ function Player() {
           </a>
         </div>
       </div>
-      <div className="flex items-center justify-evenly">
+      <div className="flex flex-1 items-center justify-evenly ">
         <SwitchHorizontalIcon className="button" />
         <RewindIcon className="button" />
         {!isPlaying ? (
@@ -126,8 +128,24 @@ function Player() {
         <FastForwardIcon className="button" />
         <ReplyIcon className="button" />
       </div>
-      <div className="md:space-x-4 space-x-3 flex items-center justify-end px-4">
-        <VolumeUpIcon className="button" />
+      <div className="md:space-x-4 space-x-3 flex flex-[0.4] items-center justify-end px-4">
+        {volume === 0 ? (
+          <VolumeOffIcon
+            className="button"
+            onClick={() => {
+              setVolumeHolder(0);
+              setVolume(volumeHolder);
+            }}
+          />
+        ) : (
+          <VolumeUpIcon
+            className="button"
+            onClick={() => {
+              setVolumeHolder(volume);
+              setVolume(0);
+            }}
+          />
+        )}
         <input
           className="w-14 md:w-28"
           type="range"

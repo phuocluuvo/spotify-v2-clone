@@ -51,7 +51,7 @@ export default NextAuth({
 
       // tra ve token cu neu nhu accessTokenExpires chua het han
       if (Date.now() < token.accessTokenExpires) {
-        console.log("EXISTING TOKEN");
+        console.log("EXISTING TOKEN ", token);
         return token;
       }
 

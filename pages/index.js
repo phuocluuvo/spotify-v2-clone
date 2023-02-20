@@ -3,12 +3,6 @@ import Sidebar from "../components/Sidebar";
 import Center from "../components/Center";
 import Player from "../components/Player";
 import { getSession } from "next-auth/react";
-import { useRecoilValue } from "recoil";
-import {
-  currentTrackIdState,
-  isPlayingState,
-  currentTrackState,
-} from "../atoms/trackAtom";
 import useTrackInfo from "../hooks/useTrackInfo";
 const Home = () => {
   const trackInfo = useTrackInfo();
